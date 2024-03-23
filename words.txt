@@ -1,0 +1,20 @@
+dusty,You might get sick
+lemon,It's sour
+grape,It's often used in making wine
+peach,It's fuzzy-skinned
+melon,It's a type of fruit
+horse,It's a common farm animal
+tiger,It has stripes
+snake,It slithers on the ground
+eagle,It's a bird of prey
+shark,It lives in the ocean
+maple,It's a type of tree
+river,It flows continuously
+mouse,It's a small rodent
+brain,It's the organ inside your skull
+plant,It grows in soil
+smile,It shows happiness
+house,It's a place where people live
+music,It's a form of art
+dance,It involves rhythmic movement
+beach,It's a sandy shore along the ocean
