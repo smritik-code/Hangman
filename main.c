@@ -58,7 +58,7 @@ int main() {
 
     // Game loop
     while (attempts > 0 && numGuessed < len) {
-        system("clear"); // Clear screen
+        // Clear screen
 
         // Draw hangman
         drawHangman(attempts);
@@ -103,6 +103,7 @@ int main() {
     // Calculate score
     if (numGuessed == len) {
         displayVictoryMessage();
+          printf("The word is: %s\n", word);
         printf("Your score: %d\n", score);
         if (score > highestScore) {
             highestScore = score;
