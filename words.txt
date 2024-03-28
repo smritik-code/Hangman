@@ -33,7 +33,6 @@ flame, Burning fire.
 baker, One who bakes bread.
 ocean, Vast body of water.
 chair, Furniture for sitting.
-puppy, Young dog.
 daisy, Common flower.
 juice, Liquid from fruits.
 lucky, Fortunate.
