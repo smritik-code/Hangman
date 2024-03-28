@@ -5,6 +5,7 @@
 #include <time.h>
 
 // Function prototypes
+void playGame();
 void drawHangman(int);
 void drawWord(char[], char[]);
 int checkGuess(char[], char[], char, int);
@@ -14,15 +15,47 @@ void displayVictoryMessage();
 void displayLosingMessage();
 int playAgain();
 void loadWords(char *filename, char *words[], char *hints[], int *numWords);
+int readHighScore();
+void updateHighScore(int score);
 
-// Global variable for highest score
-int highestScore = 0;
-#define MAX_ATTEMPTS 6
+
+// Global variable for score
+#define MAX_ATTEMPTS 4
+int highestScore;
+int i;
+int score = 0;
 
 // Main function
 int main() {
-    // Array of 5-letter words, each with its associated hint
-    char *words[100]; 
+   printf("                   WELCOME TO HANGMAN           \n");
+
+    printf("\n\n\n1. Start a New Game\n");
+    printf("2. Check High Score\n");
+    printf("Enter your choice: ");
+
+    int choice;
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 1:
+            // Start a new game
+            printf("\nStarting a new game...\n");
+            playGame();
+            break;
+        case 2:
+            // Check high score
+             printf("\nHigh Score: %d\n", readHighScore());
+            break;
+        default:
+            printf("\nInvalid choice. Please select either 1 or 2.\n");
+            break;
+    }
+    return 0;
+}
+
+void playGame(){
+ // Array of 5-letter words, each with its associated hint
+    char *words[100];
     char *hints[100];
     int numWords;
 
@@ -38,17 +71,17 @@ int main() {
 
     char guessedWord[20];
     int len = strlen(word);
-    for (int i = 0; i < len; i++)
+    for (i = 0; i < len; i++)
         guessedWord[i] = '_';
     guessedWord[len] = '\0';
 
     char guessedLetters[26];
-    int attempts = 6;
+    int attempts = MAX_ATTEMPTS;
     int numGuessed = 0;
-    int score = 0;
+
 
     // Initialize guessed letters array
-    for (int i = 0; i < 26; i++)
+    for (i = 0; i < 26; i++)
         guessedLetters[i] = 0;
 
         printWelcomeMessage();
@@ -58,7 +91,6 @@ int main() {
 
     // Game loop
     while (attempts > 0 && numGuessed < len) {
-        // Clear screen
 
         // Draw hangman
         drawHangman(attempts);
@@ -68,7 +100,7 @@ int main() {
 
         // Print guessed letters
         printf("\nGuessed letters: ");
-        for (int i = 0; i < 26; i++) {
+        for (i = 0; i < 26; i++) {
             if (guessedLetters[i] != 0)
                 printf("%c ", guessedLetters[i]);
         }
@@ -99,15 +131,18 @@ int main() {
 
         // Update guessed letters array
         guessedLetters[tolower(guess) - 'a'] = tolower(guess);    }
+         highestScore= readHighScore();
 
     // Calculate score
     if (numGuessed == len) {
         displayVictoryMessage();
-          printf("The word is: %s\n", word);
+        printf("The word is: %s\n", word);
         printf("Your score: %d\n", score);
+        highestScore= readHighScore();
         if (score > highestScore) {
             highestScore = score;
-            printf("Congratulations! You've achieved a new highest score!\n");}
+            printf("Congratulations! You've achieved a new highest score!\n");
+            updateHighScore(highestScore);}
     } else {
         displayLosingMessage();
         drawHangman(attempts);
@@ -119,10 +154,9 @@ int main() {
 
     // Play again
     if (playAgain()) {
-        main();
+        playGame();
     }
 
-    return 0;
 }
 
 // Function to draw hangman based on attempts left
@@ -143,7 +177,7 @@ void drawHangman(int attempts) {
             printf(" |     (_) \n");
             printf(" |     \\|/\n");
             printf(" |      |\n");
-            printf(" |     /\n");
+            printf(" |       \n");
             printf("_|_\n");
             break;
         case 2:
@@ -151,7 +185,7 @@ void drawHangman(int attempts) {
             printf(" |/     |\n");
             printf(" |     (_) \n");
             printf(" |     \\|/\n");
-            printf(" |      |\n");
+            printf(" |       \n");
             printf(" |\n");
             printf("_|_\n");
             break;
@@ -159,45 +193,28 @@ void drawHangman(int attempts) {
             printf("  _______\n");
             printf(" |/     |\n");
             printf(" |     (_) \n");
-            printf(" |      |/\n");
-            printf(" |      |\n");
+            printf(" |      | \n");
+            printf(" |        \n");
             printf(" |\n");
             printf("_|_\n");
             break;
         case 4:
             printf("  _______\n");
             printf(" |/     |\n");
-            printf(" |     (_) \n");
-            printf(" |      |\n");
-            printf(" |      |\n");
-            printf(" |\n");
-            printf("_|_\n");
-            break;
-        case 5:
-            printf("  _______\n");
-            printf(" |/     |\n");
-            printf(" |     (_) \n");
-            printf(" |\n");
-            printf(" |\n");
-            printf(" |\n");
-            printf("_|_\n");
-            break;
-        case 6:
-            printf("  _______\n");
-            printf(" |/     |\n");
-            printf(" |\n");
-            printf(" |\n");
-            printf(" |\n");
+            printf(" |       \n");
+            printf(" |        \n");
+            printf(" |        \n");
             printf(" |\n");
             printf("_|_\n");
             break;
     }
 }
 
+
 // Function to draw the word with underscores for missing letters
 void drawWord(char word[], char guessedWord[]) {
     printf("\n\n");
-    for (int i = 0; i < strlen(word); i++) {
+    for (i = 0; i < strlen(word); i++) {
         printf("%c ", guessedWord[i]);
     }
     printf("\n\n");
@@ -206,7 +223,7 @@ void drawWord(char word[], char guessedWord[]) {
 // Function to check if the guessed letter is correct
 int checkGuess(char word[], char guessedWord[], char guess, int len) {
     int found = 0;
-    for (int i = 0; i < len; i++) {
+    for (i = 0; i < len; i++) {
         if (word[i] == guess) {
             guessedWord[i] = guess;
             found = 1;
@@ -216,7 +233,6 @@ int checkGuess(char word[], char guessedWord[], char guess, int len) {
 }
 
 void printWelcomeMessage() {
-    printf("Welcome to Hangman!\n");
     printf("Try to guess the word by entering one letter at a time.\n");
     printf("You have %d attempts. Good luck!\n", MAX_ATTEMPTS);
 }
@@ -238,14 +254,19 @@ void displayLosingMessage() {
 
 // Function to ask if player wants to play again
 int playAgain() {
+    highestScore= readHighScore();
     char choice;
     printf("\nDo you want to play again? (Y/N): ");
     scanf(" %c", &choice);
     if (tolower(choice) == 'y') {
-        // Clear the screen using ANSI escape sequence
-        printf("\033[2J\033[1;1H");
+        system("cls");
         return 1;
     } else {
+         int currentScore= score;
+        if (currentScore > highestScore) {
+            highestScore = currentScore;
+            updateHighScore(highestScore);
+        }
         return 0;
     }
 }
@@ -274,5 +295,30 @@ void loadWords(char *filename, char *words[], char *hints[], int *numWords) {
         (*numWords)++;
     }
 
+    fclose(file);
+}
+
+
+// Function to read the high score from the file
+int readHighScore() {
+    FILE *file = fopen("highscore.txt", "r");
+    if (file == NULL) {
+        printf("Error opening high score file.\n");
+        return 0;
+    }
+    int highScore;
+    fscanf(file, "%d", &highScore);
+    fclose(file);
+    return highScore;
+}
+
+// Function to update the high score in the file
+void updateHighScore(int score) {
+    FILE *file = fopen("highscore.txt", "w");
+    if (file == NULL) {
+        printf("Error opening high score file for writing.\n");
+        return;
+    }
+    fprintf(file, "%d", score);
     fclose(file);
 }
