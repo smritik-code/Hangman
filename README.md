@@ -1,4 +1,4 @@
-##Hangman Game in C
+Hangman Game in C
 
 A simple command-line Hangman game implemented in C. The game randomly selects a word from a word list file, provides hints, and allows the player to guess letters within a limited number of attempts. It keeps track of the highest score across game sessions.
 
